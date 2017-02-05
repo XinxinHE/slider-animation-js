@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Slider</title>
+  <link rel="stylesheet" type="text/css" href="slider.css">
+  <link rel="shortcut icon" href="">
+</head>
+<body>
+  <div class="container">
+    <div class="image-slider-wrapper">
+        <ul id="image-slider">
+          <li><img src="img/1.jpg"></li>
+          <li><img src="img/2.jpg"></li>
+          <li><img src="img/3.jpg"></li>
+          <li><img src="img/4.jpg"></li>
+          <li><img src="img/5.jpg"></li>
+          <li><img src="img/6.jpg"></li>
+          <li><img src="img/7.jpg"></li>
+        </ul>
+    </div>
+  </div>
+
+<script>
+
+var imageNum;
+var li;
+var sliderElement;
+var imageWidths;
+var current = 0;
+
+init();
+
+function init() {
+  sliderElement =  document.getElementById('image-slider');
+  li = sliderElement.children;
+  imageNum = li.length;
+  imageWidth = li[0].childNodes[0].clientWidth;
+
+  sliderElement.style.width = imageNum * imageWidth + 'px';
+
+  move(sliderElement, imageWidth, 1000);
+}
+
+function animate(opts) {
+  var startTime = new Date();
+
+  var id = setInterval(function() {
+      var timePassed = new Date() - startTime;
+      var progress = timePassed / opts.duration;
+      var delta = opts.delta(progress);
+      var step = opts.step(delta);
+
+  //    console.log(progress);
+
+      if(progress >= 1) {
+        clearInterval(id);
+        if(current < imageNum - 2){
+          progress = 0;
+          current++;
+          animate(opts);
+        }
+      }
+  }, opts.delay || 20);
+
+}
+
+function move(element, imageSize, duration) {
+  var to = imageSize;
+
+  animate({
+    duration: duration,
+    delta: function(p) { return Math.max(0, 2 * p - 1)},
+    step: function(delta) { element.style.left = '-' + ((current * imageSize) + (delta * imageSize)) + 'px'; }
+  });
+}
+
+
+</script>
+</body>
+</html>

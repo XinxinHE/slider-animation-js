@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Animation</title>
+<link rel="shortcut icon" href="">
+
+<style>
+.parentBlock {
+  width: 150px;
+  height: 50px;
+  border: 1px solid black;
+}
+
+.exampleBlock {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-color: red;
+}
+</style>
+<script>
+/*  ------------- Step 1 ------------------
+  function move(elem){
+    var left = 0;
+
+    function frame(){
+      left++;
+      elem.style.left = left + 'px';
+      if(left == 100)
+      clearInterval(id);
+    }
+
+    var id = setInterval(frame, 10); //draw every 10 ms
+
+  }
+------------------------------------------- */
+
+/* -------- Definition of setInterval ----------
+
+  var id = setInterval(function(){
+  show the current frame;
+  if(finished) clearInterval(id);
+});
+*/
+
+function animate(opts) {
+  var startTime = new Date();
+
+  var id = setInterval(function() {
+
+    var timePassed = new Date() - startTime;
+    progress = timePassed / opts.duration;
+    var delta = opts.delta(progress);
+    opts.step(delta);
+
+    console.log(progress);
+
+    if(progress >= 1)
+    { clearInterval(id); }
+
+  }, opts.delay || 10);
+}
+
+function move(element, delta, duration){
+  var to = 100;
+
+  animate({
+    duration: duration || 1000,
+    delta: delta,
+    step: function(delta) { element.style.left = delta * to + 'px'; },
+    delay: 10
+  });
+}
+
+</script>
+</head>
+<body>
+  <div onclick="move(this.children[0], function(p) {return p;}, 1000)" class="parentBlock">
+    <div class="exampleBlock"></div>
+  </div>
+</body>
+</html>
